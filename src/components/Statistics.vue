@@ -20,7 +20,7 @@ import { ref, computed } from 'vue';
 import { useTimeHistoryStore } from '@/store/timeHistory';
 const timeHistoryStore = useTimeHistoryStore();
 let historyLength = computed(() => timeHistoryStore.hist.length);
-const solvePercent = ref(computed(() => timeHistoryStore.hist.length * 20));
+const solvePercent = ref(computed(() => timeHistoryStore.histLength * 20));
 console.log(`History Length: ${historyLength.value}`);
 
 function calculateAo5(): number | null {

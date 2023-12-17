@@ -1,4 +1,8 @@
 <template>
+  <div>
+    <p>{{ currentPuzzleType }}</p>
+    <v-select color="primary" variant="outlined" :items="['2', '3', '4', '5', '6', '7', 'pyraminx', 'megaminx', 'square-1', 'skewb', 'clock']" v-model="currentPuzzleType"></v-select>
+  </div>
   <div id="time">
     <p class="text-green" v-if="ableToStart" >{{ time }}</p>
     <p class="text-red" v-else-if="isInspectionTime && isHoldTime" >{{ time }}</p>
@@ -13,13 +17,15 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import type Ref from 'vue';
-import { validity, TimeResult } from '@/myTypes/timeResult';
+import type { Ref } from 'vue';
+import { validity, puzzleType, TimeResult } from '@/myTypes/timeResult';
 import { useTimeHistoryStore } from '@/store/timeHistory';
+import { useTimerSettingsStore } from '@/store/timerSettings';
+import { storeToRefs } from 'pinia';
 import { useEventListener } from '@vueuse/core';
 
 const time = ref('0.000');
-const isValid: Ref.Ref<validity> = ref(true);
+const isValid: Ref<validity> = ref(true);
 const startTime = ref();
 const isStarted = ref(false);
 const isInspectionTime = ref(false);
@@ -28,6 +34,9 @@ const timeoutID = ref();
 // const timeList: Ref<string[]> = ref([]);
 // const timeList: Ref.Ref<TimeResult[]> = ref([]);
 const timeHistoryStore = useTimeHistoryStore();
+
+const timerSettingsStore = useTimerSettingsStore();
+const { currentPuzzleType } = storeToRefs(timerSettingsStore);
 
 const inspectionStartTime = ref();
 
@@ -68,6 +77,7 @@ function onKeyDown(e: KeyboardEvent) {
       time: time.value,
       scramble: undefined,
       valid: isValid.value,
+      puzzleType: currentPuzzleType.value,
     };
     // timeList.value.push(newTimeResult);
     timeHistoryStore.hist.push(newTimeResult);

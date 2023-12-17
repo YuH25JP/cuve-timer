@@ -1,4 +1,9 @@
 <template>
+  <v-row justify="center">
+    <div class="container">
+      <v-switch color="primary" label="Manual Scramble"></v-switch>
+    </div>
+  </v-row>
   <v-row justify="center" class="ma-2">
     <div class="container" style="width: 550px;">
       <v-textarea
