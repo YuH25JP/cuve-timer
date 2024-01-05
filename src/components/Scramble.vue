@@ -1,12 +1,13 @@
 <template>
   <v-row justify="center">
     <div class="container">
-      <v-switch color="primary" label="Manual Scramble"></v-switch>
+      <v-switch color="primary" label="Manual Scramble" v-model="isManualScramble"></v-switch>
     </div>
   </v-row>
   <v-row justify="center" class="ma-2">
     <div class="container" style="width: 550px;">
       <v-textarea
+        v-if="isManualScramble"
         label="INPUT SCRAMBLES HERE"
         placeholder="1. F2 R2 B2 U B2 D F2 D U2 R' F' R' B R D U R' F D 
 2. D2 B' U2 L2 U2 L2 F' U2 B' F U2 R U' F2 R2 B2 R2 B L F 
@@ -22,6 +23,8 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue';
+const isManualScramble = ref(false);
 </script>
 
 <style scoped></style>

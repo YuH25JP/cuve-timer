@@ -1,7 +1,7 @@
 <template>
   <div class="timeHistory">
     <v-row justify="center">
-      <v-card width="300" class="ma-1">
+      <v-card width="200" class="ma-1">
         <v-card-item>
           <v-card-title v-if="timeHistoryStore.hist.length === 0">--.---</v-card-title>
           <v-card-title v-else-if="timeHistoryStore.hist.length > 5">{{ timeHistoryStore.hist[timeHistoryStore.hist.length - 5].time }}</v-card-title>
@@ -15,7 +15,7 @@
           <v-btn>DNF</v-btn>
         </v-card-actions>
       </v-card>
-      <v-card width="300" class="ma-1">
+      <v-card width="200" class="ma-1">
         <v-card-item>
           <v-card-title v-if="timeHistoryStore.hist.length <= 1">--.---</v-card-title>
           <v-card-title v-else-if="timeHistoryStore.hist.length > 5">{{ timeHistoryStore.hist[timeHistoryStore.hist.length - 4].time }}</v-card-title>
@@ -29,7 +29,7 @@
           <v-btn>DNF</v-btn>
         </v-card-actions>
       </v-card>
-      <v-card width="300" class="ma-1">
+      <v-card width="200" class="ma-1">
         <v-card-item>
           <v-card-title v-if="timeHistoryStore.hist.length <= 2">--.---</v-card-title>
           <v-card-title v-else-if="timeHistoryStore.hist.length > 5">{{ timeHistoryStore.hist[timeHistoryStore.hist.length - 3].time }}</v-card-title>
@@ -43,7 +43,7 @@
           <v-btn>DNF</v-btn>
         </v-card-actions>
       </v-card>
-      <v-card width="300" class="ma-1">
+      <v-card width="200" class="ma-1">
         <v-card-item>
           <v-card-title v-if="timeHistoryStore.hist.length <= 3">--.---</v-card-title>
           <v-card-title v-else-if="timeHistoryStore.hist.length > 5">{{ timeHistoryStore.hist[timeHistoryStore.hist.length - 2].time }}</v-card-title>
@@ -57,7 +57,7 @@
           <v-btn>DNF</v-btn>
         </v-card-actions>
       </v-card>
-      <v-card width="300" class="ma-1">
+      <v-card width="200" class="ma-1">
         <v-card-item>
           <v-card-title v-if="timeHistoryStore.hist.length <= 4">--.---</v-card-title>
           <v-card-title v-else-if="timeHistoryStore.hist.length > 5">{{ timeHistoryStore.hist[timeHistoryStore.hist.length - 1].time }}</v-card-title>

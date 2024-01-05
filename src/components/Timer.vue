@@ -1,30 +1,68 @@
 <template>
   <div>
     <p>{{ currentPuzzleType }}</p>
-    <v-select color="primary" variant="outlined" :items="['2', '3', '4', '5', '6', '7', 'pyraminx', 'megaminx', 'square-1', 'skewb', 'clock']" v-model="currentPuzzleType"></v-select>
+    <v-menu>
+      <template v-slot:activator="{ props }">
+        <v-btn color="primary" v-bind="props">
+          {{ currentPuzzleType }}
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item
+          v-for="t in [
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            'pyraminx',
+            'megaminx',
+            'square-1',
+            'skewb',
+            'clock',
+          ]"
+          :key="t"
+          :value="t"
+          @click="currentPuzzleType = t as puzzleType"
+        >
+          <v-list-item-title>{{ t }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
   </div>
   <div id="time">
-    <p class="text-green" v-if="ableToStart" >{{ time }}</p>
-    <p class="text-red" v-else-if="isInspectionTime && isHoldTime" >{{ time }}</p>
+    <p class="text-green" v-if="ableToStart">{{ time }}</p>
+    <p class="text-red" v-else-if="isInspectionTime && isHoldTime">
+      {{ time }}
+    </p>
     <p v-else>{{ time }}</p>
   </div>
   <div class="buttons">
-    <v-icon icon="mdi-content-copy" size="x-large" @click="copyCurrentTimeToClipboard"></v-icon>
-    <v-icon icon="mdi-delete" size="x-large" @click="deleteCurrentTime"></v-icon>
+    <v-icon
+      icon="mdi-content-copy"
+      size="x-large"
+      @click="copyCurrentTimeToClipboard"
+    ></v-icon>
+    <v-icon
+      icon="mdi-delete"
+      size="x-large"
+      @click="deleteCurrentTime"
+    ></v-icon>
     <p><v-btn color="primary" class="mt-1">Copy Current 5</v-btn></p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import type { Ref } from 'vue';
-import { validity, puzzleType, TimeResult } from '@/myTypes/timeResult';
-import { useTimeHistoryStore } from '@/store/timeHistory';
-import { useTimerSettingsStore } from '@/store/timerSettings';
-import { storeToRefs } from 'pinia';
-import { useEventListener } from '@vueuse/core';
+import { ref } from "vue";
+import type { Ref } from "vue";
+import { validity, puzzleType, TimeResult } from "@/myTypes/timeResult";
+import { useTimeHistoryStore } from "@/store/timeHistory";
+import { useTimerSettingsStore } from "@/store/timerSettings";
+import { storeToRefs } from "pinia";
+import { useEventListener } from "@vueuse/core";
 
-const time = ref('0.000');
+const time = ref("0.000");
 const isValid: Ref<validity> = ref(true);
 const startTime = ref();
 const isStarted = ref(false);
@@ -46,19 +84,20 @@ const holdStartTime = ref();
 const ableToStart = ref(false);
 const isHoldTime = ref(false);
 
-useEventListener(document, 'keydown', onKeyDown);
-useEventListener(document, 'keyup', onKeyUp);
+useEventListener(document, "keydown", onKeyDown);
+useEventListener(document, "keyup", onKeyUp);
 
 function onKeyUp(e: KeyboardEvent) {
   console.log(`keyUp: ${e.key}`);
-  if (downRightAfterStop.value) { // keydownでタイマーをストップした直後のkeyupイベントではタイマーがスタートしないようにする
+  if (downRightAfterStop.value) {
+    // keydownでタイマーをストップした直後のkeyupイベントではタイマーがスタートしないようにする
     downRightAfterStop.value = false;
-  } else if (e.key == ' ' && !isStarted.value && !isInspectionTime.value) {
+  } else if (e.key == " " && !isStarted.value && !isInspectionTime.value) {
     //TODO: inspectionをスタートする処理
     inspectionStartTime.value = Date.now();
     displayInspectionTime();
     isInspectionTime.value = true;
-  } else if (e.key == ' ' && !isStarted.value) {
+  } else if (e.key == " " && !isStarted.value) {
     if (ableToStart.value) {
       clearTimeout(timeoutID.value); // インスペクション用のタイマーをクリア
       handleClick();
@@ -83,12 +122,13 @@ function onKeyDown(e: KeyboardEvent) {
     timeHistoryStore.hist.push(newTimeResult);
     isValid.value = true;
     downRightAfterStop.value = true;
-  } else if (e.key == ' ' && !isStarted.value && isInspectionTime.value) {
+  } else if (e.key == " " && !isStarted.value && isInspectionTime.value) {
     switch (isHoldTime.value) {
       case false:
         holdStartTime.value = Date.now();
         isHoldTime.value = true;
-        console.log('hold started');
+        console.log("hold started");
+        break;
       default:
         ableToStart.value = judgeAbleToStart();
     }
@@ -107,11 +147,13 @@ function judgeAbleToStart(): boolean {
 }
 
 function handleClick() {
-  if (!isStarted.value) { // start the timer
+  if (!isStarted.value) {
+    // start the timer
     isStarted.value = true;
     startTime.value = Date.now();
     displayTime();
-  } else { // stop the timer
+  } else {
+    // stop the timer
     isStarted.value = false;
     clearTimeout(timeoutID.value);
     // timeList.value.push(time.value);
@@ -124,7 +166,7 @@ function displayTime() {
   }
   const dt = new Date(Date.now() - startTime.value);
   const s = String(dt.getMinutes() * 60 + dt.getSeconds());
-  const millis = String(dt.getMilliseconds()).padStart(3, '0');
+  const millis = String(dt.getMilliseconds()).padStart(3, "0");
 
   time.value = `${s}.${millis}`;
   timeoutID.value = setTimeout(displayTime, 10);
@@ -150,20 +192,23 @@ function displayInspectionTime() {
 }
 
 function copyCurrentTimeToClipboard() {
-  navigator.clipboard.writeText(time.value).then(() => {
-    console.log('copied!');
-  }).catch(e => {
-    console.error(e);
-  })
+  navigator.clipboard
+    .writeText(time.value)
+    .then(() => {
+      console.log("copied!");
+    })
+    .catch((e) => {
+      console.error(e);
+    });
 }
 
 function deleteCurrentTime() {
   if (timeHistoryStore.hist.length > 0) {
     timeHistoryStore.hist.pop();
-    console.log('deleted!');
-    time.value = '0.000'
+    console.log("deleted!");
+    time.value = "0.000";
   } else {
-    console.error('no history to delete');
+    console.error("no history to delete");
   }
 }
 </script>
